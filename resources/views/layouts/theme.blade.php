@@ -1,4 +1,5 @@
 @include('layouts.header')
+@yield('styles')
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
         <div class="layout-container">
@@ -29,3 +30,4 @@
 @include('layouts.footer')
 
 @include('layouts.script')
+

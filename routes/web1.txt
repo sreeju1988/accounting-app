@@ -1,0 +1,86 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\InvitationController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\AgentController;
+use App\Http\Controllers\AgentInvitationController;
+use App\Http\Controllers\Agent\ServiceBookingController;
+use App\Http\Controllers\DocumentRuleController;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+
+Route::get('/invitations/accept/{token}', [InvitationController::class, 'accept'])->name('invitations.accept');
+Route::get('/invitations/agent/accept/{token}', [AgentInvitationController::class, 'accept'])->name('invitations.agent.accept');
+Route::post('/invitations/agent/register/{token}', [AgentInvitationController::class, 'register'])->name('invitations.agent.register');
+Route::post('/invitations/register/{token}', [InvitationController::class, 'register'])->name('invitations.register');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('/profile/change-password', [ProfileController::class, 'showChangePasswordForm'])->name('profile.password.edit');
+    Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.password.update');
+});
+
+Route::middleware(['auth', 'role:super_admin'])->group(function () {
+    Route::get('/invitations', [InvitationController::class, 'index'])->name('invitations.index');
+    Route::get('/invitations/create', [InvitationController::class, 'create'])->name('invitations.create');
+    Route::post('/invitations', [InvitationController::class, 'store'])->name('invitations.store');
+
+    Route::get('/invitations/agent', [AgentInvitationController::class, 'index'])->name('invitations.agent.index');
+    Route::get('/invitations/agent/create', [AgentInvitationController::class, 'create'])->name('invitations.agent.create');
+    Route::post('/invitations/agent', [AgentInvitationController::class, 'store'])->name('invitations.agent.store');
+
+    Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
+    Route::post('/staff/{user}/toggle', [StaffController::class, 'toggleStatus'])->name('staff.toggle');
+
+
+    Route::get('/agent', [AgentController::class, 'index'])->name('agent.index');
+    Route::post('/agent/{user}/toggle', [AgentController::class, 'toggleStatus'])->name('agent.toggle');
+
+    // Document Rules Routes
+    Route::resource('document-rules', DocumentRuleController::class);
+
+    // Other admin routes can be added here
+    // Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
+
+    // View all bookings (for super_admin)
+    Route::get('/agent/bookings', [ServiceBookingController::class, 'allBookings'])->name('admin.agent.bookings.all');
+    
+});
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('services', App\Http\Controllers\Admin\ServiceController::class);
+});
+
+Route::prefix('agent')->name('agent.')->middleware(['auth'])->group(function () {
+    Route::get('services', [App\Http\Controllers\Agent\ServiceBookingController::class, 'serviceList'])->name('services.index');
+    Route::get('services/{id}', [App\Http\Controllers\Agent\ServiceBookingController::class, 'serviceDetails'])->name('services.show');
+    // Route::post('services/{id}/book', [App\Http\Controllers\Agent\ServiceBookingController::class, 'store'])->name('services.store');
+    // Route::get('bookings/{id}', [App\Http\Controllers\Agent\ServiceBookingController::class, 'bookingDetail'])->name('bookings.show');
+
+    Route::get('bookings', [ServiceBookingController::class, 'index'])->name('bookings.index');
+    Route::get('bookings/new', [ServiceBookingController::class, 'create'])->name('bookings.create');
+    Route::post('bookings', [ServiceBookingController::class, 'store'])->name('bookings.store');
+
+    Route::get('services/book/{id}', [ServiceBookingController::class, 'showClientForm'])->name('bookings.clientForm');
+    Route::post('services/book/{id}', [ServiceBookingController::class, 'createBooking'])->name('bookings.createBooking');
+
+    Route::get('bookings/{booking}/upload', [ServiceBookingController::class, 'uploadDocument'])->name('bookings.uploadDocument');
+    Route::get('bookings/{booking}/upload/{document}', [ServiceBookingController::class, 'showUploadForm'])->name('bookings.showUploadForm');
+    Route::post('bookings/{booking}/upload', [ServiceBookingController::class, 'storeDocument'])->name('bookings.storeDocument');
+    Route::delete('bookings/{booking}/document/{document}', [ServiceBookingController::class, 'destroyDocument'])->name('bookings.destroyDocument');
+
+    Route::get('bookings/{id}', [ServiceBookingController::class, 'bookedServiceShow'])->name('bookings.show');
+});

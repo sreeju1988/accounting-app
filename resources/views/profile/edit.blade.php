@@ -15,7 +15,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{route('profile.password.edit')}}"><i class="icon-base bx bx-bell icon-sm me-1_5"></i> Change Password</a>
                         </li>
-                       
+
                     </ul>
                 </div>
                 <div class="card mb-6">
@@ -23,31 +23,8 @@
                     @if(session('success'))
                     <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
-                    <div class="card-body">
-                        <form id="formAccountSettings" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
+                    <form id="formAccountSettings" method="POST" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                             @csrf
-                            <div class="d-flex align-items-start align-items-sm-center gap-6 pb-4 border-bottom">
-                                <img
-                                    src="{{url('public/theme/assets/img/avatars/1.png')}}"
-                                    alt="user-avatar"
-                                    class="d-block w-px-100 h-px-100 rounded"
-                                    id="uploadedAvatar" />
-                                <div class="button-wrapper">
-                                    <label for="upload" class="btn btn-primary me-3 mb-4" tabindex="0">
-                                        <span class="d-none d-sm-block">Upload new photo</span>
-                                        <i class="icon-base bx bx-upload d-block d-sm-none"></i>
-                                        <input
-                                            type="file"
-                                            id="upload"
-                                            class="account-file-input"
-                                            hidden
-                                            accept="image/png, image/jpeg" />
-                                    </label>
-
-                                    <div>Allowed JPG, GIF or PNG. Max size of 800K</div>
-                                </div>
-                            </div>
-                    </div>
                     <div class="card-body pt-4">
 
                         <div class="row g-6">

@@ -23,6 +23,21 @@ class HomeController extends Controller
      */
     public function index()
     {
+       
+        $user=auth()->user();
+        if($user->roleType()=='Admin'){
+
+            return redirect('/admin/home');
+        }
+
+        if($user->roleType()=='Agent'){
+
+            return redirect('/agent/home');
+        }
+        if($user->roleType()=='Staff'){
+
+            return redirect('/staff/home');
+        }
         return view('home');
     }
 }
