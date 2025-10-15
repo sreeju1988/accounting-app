@@ -73,3 +73,18 @@
     </div>
 </div>
 @endsection
+@push('scripts')
+    <!-- Include a WYSIWYG editor like TinyMCE or CKEditor -->
+    <script src="https://cdn.tiny.cloud/1/r48wq4hhnbrfapvdzk898dszh0g675k2gt25teao2m00ki8b/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            tinymce.init({
+                selector: '#content',
+                menubar: false,
+                plugins: 'lists link',
+                toolbar: 'undo redo | bold italic underline | bullist numlist | link',
+                height: 200
+            });
+        });
+    </script>
+    @endpush

@@ -60,24 +60,12 @@
                             <td>{{ $booking->created_at->format('d M Y') }}</td>
                             <td>
                                 <div class="btn-group" role="group">
-                                    <a href="{{ route('admin.service_order.show', $booking->id) }}"
+                                    <a href="{{ route('staff.service_order.show', $booking->id) }}"
                                         class="btn btn-sm btn-outline-primary">
                                         <i class="bi bi-eye"></i> View
                                     </a>
 
-                                    @if(in_array($booking->status, ['pending', 'under_review']))
-                                    <a href="{{ route('agent.bookings.upload', $booking->id) }}"
-                                        class="btn btn-sm btn-outline-secondary">
-                                        <i class="bi bi-upload"></i> Upload
-                                    </a>
-                                    @endif
-
-                                    @if($booking->status === 'completed')
-                                    <a href="{{ route('agent.bookings.download', $booking->id) }}"
-                                        class="btn btn-sm btn-outline-success">
-                                        <i class="bi bi-download"></i> Files
-                                    </a>
-                                    @endif
+                                   
                                 </div>
                             </td>
                         </tr>
